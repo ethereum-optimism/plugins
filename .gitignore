@@ -1,2 +1,9 @@
 node_modules/
 yarn-error.log
+
+/*.js
+/*.js.map
+/*.d.ts
+/*.d.ts.map
+/hardhat
+tsconfig.tsbuildinfo
