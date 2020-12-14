@@ -1,10 +1,16 @@
 {
   "name": "@eth-optimism/plugins",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "main": "index.js",
   "types": "index.d.ts",
   "files": [
-    "src/"
+    "hardhat/",
+    "*.d.ts",
+    "*.d.ts.map",
+    "*.js",
+    "*.js.map",
+    "LICENSE",
+    "README.md"
   ],
   "license": "MIT",
   "scripts": {
