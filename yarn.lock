@@ -2,19 +2,22 @@
 # yarn lockfile v1
 
 
-"@eth-optimism/contracts@^0.0.2-alpha.13":
-  version "0.0.2-alpha.13"
-  resolved "https://registry.yarnpkg.com/@eth-optimism/contracts/-/contracts-0.0.2-alpha.13.tgz#4c404d7ee5778cad3b24d827426bfc020ad9cd39"
-  integrity sha512-Kk+cUA4RdUGrRQKkIyoAgj8FMFza/puxT4eOjcwDkSFbUcBSgqfEh8/34r5BCIEg//roZbK2xiKNJBVZ6p/igA==
+"@eth-optimism/contracts@^0.0.2-alpha.14":
+  version "0.0.2-alpha.14"
+  resolved "https://registry.yarnpkg.com/@eth-optimism/contracts/-/contracts-0.0.2-alpha.14.tgz#382ae9250e7d89e7729bcfe73ffdb85897e385c2"
+  integrity sha512-EeOKiQ+Tu/bZqlq2bsXJegRYHhBXlcDO+fNXG1NJyies23rcLrjR7LMocJmw/F9TpYJ08UqvOHttD5w//cntpg==
   dependencies:
+    "@eth-optimism/solc" "^0.6.12-alpha.1"
     "@ethersproject/contracts" "^5.0.5"
     "@ethersproject/hardware-wallets" "^5.0.8"
+    "@openzeppelin/contracts" "^3.3.0"
     ethers "5.0.0"
+    ganache-core "^2.12.1"
 
-"@eth-optimism/ethereumjs-vm@^4.2.0-alpha.1":
-  version "4.2.0-alpha.1"
-  resolved "https://registry.yarnpkg.com/@eth-optimism/ethereumjs-vm/-/ethereumjs-vm-4.2.0-alpha.1.tgz#6e0f2c2920a54a5675d79a97b3664c7c3b6ea99a"
-  integrity sha512-QjdjflNzJiU9gwuKHsvxZwzCqmAvdl/DJSKq2bzyNaLNlS3/0usOTSf9umpNLN/do4rQwS3thAB6vDp8ciSTSQ==
+"@eth-optimism/ethereumjs-vm@^4.2.0-alpha.2":
+  version "4.2.0-alpha.2"
+  resolved "https://registry.yarnpkg.com/@eth-optimism/ethereumjs-vm/-/ethereumjs-vm-4.2.0-alpha.2.tgz#e8af5e0594224c36bb9f6756cf0ff38467d265b8"
+  integrity sha512-9poKtgi0En8uSyhPZeM0cwjBGHRU9xwnlpvpZUuYvwP8972DzpfPEQ4zyqiOb1qNUbW9ruu2YlRyQQN70m+6/w==
   dependencies:
     async "^2.1.2"
     async-eventemitter "^0.2.2"
@@ -528,6 +531,11 @@
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/@nomiclabs/hardhat-ethers/-/hardhat-ethers-2.0.1.tgz#f86a6fa210dbe6270adffccc75e93ed60a856904"
   integrity sha512-uTFHDhhvJ+UjfvvMeQxD3ZALuzuI3FXzTYT1Z5N3ebyZL5z4Ogwt55GB0R9tdKY0p5HhDhBjU/gsCjUEwIVoaw==
+
+"@openzeppelin/contracts@^3.3.0":
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/@openzeppelin/contracts/-/contracts-3.3.0.tgz#ffdb693c5c349fc33bba420248dd3ac0a2d7c408"
+  integrity sha512-AemZEsQYtUp1WRkcmZm1div5ORfTpLquLaziCIrSagjxyKdmObxuaY1yjQ5SHFMctR8rLwp706NXTbiIRJg7pw==
 
 "@sentry/core@5.29.0":
   version "5.29.0"
@@ -3408,7 +3416,7 @@ functional-red-black-tree@^1.0.1, functional-red-black-tree@~1.0.1:
   resolved "https://registry.yarnpkg.com/functional-red-black-tree/-/functional-red-black-tree-1.0.1.tgz#1b0ab3bd553b2a0d6399d29c0e3ea0b252078327"
   integrity sha1-GwqzvVU7Kg1jmdKcDj6gslIHgyc=
 
-ganache-core@^2.13.1:
+ganache-core@^2.12.1:
   version "2.13.1"
   resolved "https://registry.yarnpkg.com/ganache-core/-/ganache-core-2.13.1.tgz#bf60399a2dd084e1090db91cbbc7ed3885dc01e4"
   integrity sha512-Ewg+kNcDqXtOohe7jCcP+ZUv9EMzOx2MoqOYYP3BCfxrDh3KjBXXaKK+Let7li0TghAs9lxmBgevZku35j5YzA==

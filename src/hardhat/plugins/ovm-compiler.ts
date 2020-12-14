@@ -46,11 +46,14 @@ subtask(
     }
 
     // Build both inputs separately.
+    console.log('Compiling evm contracts...')
+    const evmOutput = await runSuper({ input: evmInput, solcPath })
+
+    console.log('Compiling ovm contracts...')
     const ovmOutput = await run(TASK_COMPILE_SOLIDITY_RUN_SOLCJS, {
       input: ovmInput,
       solcJsPath: ovmSolcPath,
     })
-    const evmOutput = await runSuper({ input: evmInput, solcPath })
 
     // Filter out any "No input sources specified" errors, but only if one of the two compilations
     // threw the error.
