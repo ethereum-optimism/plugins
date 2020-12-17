@@ -1,3 +1,4 @@
+/* Imports: External */
 import { subtask } from 'hardhat/config'
 import {
   TASK_COMPILE_SOLIDITY_RUN_SOLCJS,
@@ -39,20 +40,23 @@ subtask(
     // Separate the EVM and OVM inputs.
     for (const file of Object.keys(input.sources)) {
       evmInput.sources[file] = input.sources[file]
-
-      if (input.sources[file].content.includes('// @supports: ovm')) {
-        ovmInput.sources[file] = input.sources[file]
-      }
+      ovmInput.sources[file] = input.sources[file]
     }
 
     // Build both inputs separately.
-    console.log('Compiling evm contracts...')
     const evmOutput = await runSuper({ input: evmInput, solcPath })
-
-    console.log('Compiling ovm contracts...')
     const ovmOutput = await run(TASK_COMPILE_SOLIDITY_RUN_SOLCJS, {
       input: ovmInput,
       solcJsPath: ovmSolcPath,
+    })
+
+    ovmOutput.errors = (ovmOutput.errors || []).filter((error: any) => {
+      return (
+        error.severity !== 'error' ||
+        input.sources[error.sourceLocation.file].content.includes(
+          '// @supports: ovm'
+        )
+      )
     })
 
     // Filter out any "No input sources specified" errors, but only if one of the two compilations
@@ -66,11 +70,21 @@ subtask(
     }
 
     // Transfer over any OVM outputs to the EVM output, with an identifier.
-    for (const fileName of Object.keys(ovmOutput.contracts)) {
+    for (const fileName of Object.keys(ovmOutput.contracts || {})) {
       if (fileName in evmOutput.contracts) {
         for (const [contractName, contractOutput] of Object.entries(
           ovmOutput.contracts[fileName]
         )) {
+          const linkRefs = (contractOutput as any).evm.bytecode.linkReferences
+          for (const linkRefFileName of Object.keys(linkRefs || {})) {
+            for (const [linkRefName, linkRefOutput] of Object.entries(
+              linkRefs[linkRefFileName]
+            )) {
+              delete linkRefs[linkRefFileName][linkRefName]
+              linkRefs[linkRefFileName][`${linkRefName}.ovm`] = linkRefOutput
+            }
+          }
+
           evmOutput.contracts[fileName][`${contractName}.ovm`] = contractOutput
         }
       }

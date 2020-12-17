@@ -1,2 +1,3 @@
-import './plugins/ovm-compiler'
+import './plugins/compiler'
 import './plugins/ethers'
+import './plugins/web3'

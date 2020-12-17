@@ -1,16 +1,21 @@
-import './type-extensions'
+/* Imports: External */
 const VM = require('@eth-optimism/ethereumjs-vm').default
 const BN = require('bn.js')
-import { getLatestStateDump } from '@eth-optimism/contracts'
 import type EthersT from 'ethers'
 import { HARDHAT_NETWORK_NAME } from 'hardhat/internal/constants'
 import { extendEnvironment } from 'hardhat/config'
 import { lazyObject } from 'hardhat/plugins'
 import { createProvider } from 'hardhat/internal/core/providers/construction'
+import { getLatestStateDump } from '@eth-optimism/contracts'
 
-import type * as ProviderProxyT from './provider-proxy'
-
-import { getContractAt, getContractFactory, getSigners } from './helpers'
+/* Imports: Internal */
+import './types/type-extensions'
+import type * as ProviderProxyT from './internal/provider-proxy'
+import {
+  getContractAt,
+  getContractFactory,
+  getSigners,
+} from './internal/helpers'
 
 extendEnvironment((hre) => {
   hre.l2provider = lazyObject(() => {
@@ -49,6 +54,8 @@ extendEnvironment((hre) => {
       if (this._node.ovmified) {
         return
       }
+
+      this._node.ovmified = true
 
       // Copy the options from the old VM instance and create a new one.
       const vm = this._node['_vm' as any]
