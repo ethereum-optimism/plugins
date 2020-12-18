@@ -15,8 +15,9 @@ subtask(
     // Try to find a path to @eth-optimism/solc, throw if we can't.
     let ovmSolcPath: string
     try {
-      ovmSolcPath = require.resolve('@eth-optimism/solc/soljson.js')
+      ovmSolcPath = require.resolve('@eth-optimism/solc-v0.6.12/soljson.js')
     } catch (err) {
+      console.log(err)
       if (err.toString().contains('Cannot find module')) {
         throw new Error(
           `@eth-optimism/plugins: Could not find "@eth-optimism/solc" in your node_modules.`

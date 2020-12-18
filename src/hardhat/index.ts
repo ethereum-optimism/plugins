@@ -1,3 +1,3 @@
-import './plugins/compiler'
-import './plugins/ethers'
-import './plugins/web3'
+import './compiler'
+import './ethers'
+import './web3'

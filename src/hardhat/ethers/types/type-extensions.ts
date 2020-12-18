@@ -5,8 +5,8 @@ import { EthereumProvider } from 'hardhat/types'
 import type {
   FactoryOptions as FactoryOptionsT,
   Libraries as LibrariesT,
-} from './helpers'
-import type { SignerWithAddress } from './signer-with-address'
+} from '../internal/helpers'
+import type { SignerWithAddress } from '../internal/signer-with-address'
 
 declare module 'hardhat/types/runtime' {
   // Beware, adding new types to any hardhat type submodule is not a good practice in a Hardhat plugin.
@@ -53,6 +53,11 @@ declare module 'hardhat/types/runtime' {
       wordlists: typeof ethers.wordlists
       version: typeof ethers.version
       Wordlist: typeof ethers.Wordlist
+
+      // Custom OVM stuff.
+      waitForBridgeRelay: (receipt: any) => Promise<void>
+      layer2BridgeRouter: string
+      layer1BridgeRouter: string
     }
 
     l2provider: EthereumProvider
