@@ -2,6 +2,7 @@
 import { task } from 'hardhat/config'
 import { TASK_TEST_SETUP_TEST_ENVIRONMENT } from 'hardhat/builtin-tasks/task-names'
 import { Web3HTTPProviderAdapter } from '@nomiclabs/hardhat-web3/dist/src/web3-provider-adapter'
+import { makeL2Provider } from '../internal/provider'
 
 task(TASK_TEST_SETUP_TEST_ENVIRONMENT, async (args, hre: any, runSuper) => {
   // Exit quickly if we're not using Web3 or not running against the OVM.
@@ -12,6 +13,7 @@ task(TASK_TEST_SETUP_TEST_ENVIRONMENT, async (args, hre: any, runSuper) => {
   // Replace the normal hardhat provider with our L2 provider and replace the existing web3
   // object with a wrapper around the L2 provider.
   const Web3 = require('web3')
+  hre.l2provider = hre.l2provider || makeL2Provider(hre)
   hre.network.provider = hre.l2provider
   hre.web3 = new Web3(new Web3HTTPProviderAdapter(hre.l2provider))
 

@@ -52,13 +52,16 @@ subtask(
     })
 
     ovmOutput.errors = (ovmOutput.errors || []).map((error: any) => {
-      if (error.severity === 'error' && !input.sources[error.sourceLocation.file].content.includes(
-        '// @supports: ovm'
-      )) {
+      if (
+        error.severity === 'error' &&
+        !input.sources[error.sourceLocation.file].content.includes(
+          '// @supports: ovm'
+        )
+      ) {
         error.severity = 'warning'
         error.formattedMessage = `OVM Compiler Error: Unable to compile file with the OVM compiler.\n You didn't compile with // @supports: ovm, so we're not throwing this as an error:\n ${error.formattedMessage}`
       }
-      
+
       return error
     })
 
