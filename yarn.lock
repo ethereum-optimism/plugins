@@ -68,10 +68,10 @@
     semver "^5.5.0"
     tmp "0.0.33"
 
-"@eth-optimism/solc-v0.7.6@npm:@eth-optimism/solc@^0.7.6-alpha.0":
-  version "0.7.6-alpha.0"
-  resolved "https://registry.yarnpkg.com/@eth-optimism/solc/-/solc-0.7.6-alpha.0.tgz#8b50279cfb4f7c55236f478dbc13ee4da7ba7f3a"
-  integrity sha512-1VAsoyXhdK9oRRa4Pu3m8SWEc2DzpJr7SiffeLcCnxL+WEc4fskYB3W26I/Df1YOy8nrf+NhbXCUgGa7W/65Mg==
+"@eth-optimism/solc-v0.7.6@npm:@eth-optimism/solc@^0.7.6-alpha.1":
+  version "0.7.6-alpha.1"
+  resolved "https://registry.yarnpkg.com/@eth-optimism/solc/-/solc-0.7.6-alpha.1.tgz#f503073161fdc0029dbc1dae6fae28eeb046b559"
+  integrity sha512-tVYeBtjwNRUDmaTdJNlKI0lTM0yV1hez0jPFOtACoepBwBEZOuuFLBgQLBOWPaR95UU2ke1YjqB7rrpkE3oRDg==
   dependencies:
     command-exists "^1.2.8"
     commander "3.0.2"
