@@ -53,14 +53,17 @@ export const loadCompilerPlugin = (version: string) => {
       })
 
       ovmOutput.errors = (ovmOutput.errors || []).map((error: any) => {
-        if (
-          error.severity === 'error' &&
-          input.sources[error.sourceLocation.file].content.includes(
-            '// @unsupported: ovm'
-          )
-        ) {
-          error.severity = 'warning'
-          error.formattedMessage = `OVM Compiler Error: Unable to compile file with the OVM compiler.\n You didn't compile with // @supports: ovm, so we're not throwing this as an error:\n ${error.formattedMessage}`
+        if (error.severity === 'error') {
+          if (
+            input.sources[error.sourceLocation.file].content.includes(
+              '// @unsupported: ovm'
+            )
+          ) {
+            error.severity = 'warning'
+            error.formattedMessage = `OVM Compiler Warning (silenced by "// @unsupported: ovm"):\n ${error.formattedMessage}`
+          } else {
+            error.formattedMessage = `OVM Compiler Error (silence by adding: "// @unsupported: ovm" to the top of this file):\n ${error.formattedMessage}`
+          }
         }
 
         return error
