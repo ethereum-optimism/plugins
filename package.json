@@ -1,6 +1,6 @@
 {
   "name": "@eth-optimism/plugins",
-  "version": "0.0.7",
+  "version": "0.0.8-alpha.0",
   "main": "index.js",
   "types": "index.d.ts",
   "files": [
@@ -14,7 +14,7 @@
   ],
   "license": "MIT",
   "scripts": {
-    "build": "tsc --build src",
+    "build": "yarn clean && tsc --build src",
     "clean": "rimraf hardhat *.d.ts *.map *.js tsconfig.tsbuildinfo",
     "lint": "yarn run lint:typescript",
     "lint:typescript": "tslint --format stylish --project .",
