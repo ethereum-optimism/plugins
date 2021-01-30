@@ -5,5 +5,10 @@ yarn-error.log
 /*.js.map
 /*.d.ts
 /*.d.ts.map
-/hardhat
 tsconfig.tsbuildinfo
+
+# Stuff inside src
+/utils
+/hardhat
+/ganache
+/waffle
