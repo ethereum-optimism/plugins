@@ -37,7 +37,7 @@ function createVMFromStateTrie(
         // we can convert this buffer to a number ahead of time before calling our
         // own getBlock(). If the conversion succeeds, we have a block number.
         // If it doesn't, we have a block hash. (Note: Our implementation accepts both.)
-        getBlock: function(number, done) {
+        getBlock: function (number, done) {
           try {
             number = typeof to.number(number)
           } catch (e) {
@@ -62,7 +62,7 @@ function createVMFromStateTrie(
 
   if (self.options.debug === true) {
     // log executed opcodes, including args as hex
-    vm.on('step', function(info) {
+    vm.on('step', function (info) {
       var name = info.opcode.name
       var argsNum = info.opcode.in
       if (argsNum) {
@@ -88,7 +88,7 @@ const wrap = (provider: any, opts: any = {}) => {
   blockchain.blockGasLimit = '0x' + new BN(gasLimit).toString('hex')
 
   let ovm: any
-  blockchain.createVMFromStateTrie = function(
+  blockchain.createVMFromStateTrie = function (
     state: any,
     activatePrecompiles: any
   ) {
@@ -101,7 +101,7 @@ const wrap = (provider: any, opts: any = {}) => {
     return vm
   }
 
-  blockchain.estimateGas = function(tx: any, blockNumber: any, callback: any) {
+  blockchain.estimateGas = function (tx: any, blockNumber: any, callback: any) {
     callback(null, {
       gasEstimate: new BN(gasLimit),
     })

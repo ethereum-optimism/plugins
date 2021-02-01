@@ -16,7 +16,9 @@ export const loadCompilerPlugin = (version: string) => {
       // Try to find a path to @eth-optimism/solc, throw if we can't.
       let ovmSolcPath: string
       try {
-        ovmSolcPath = require.resolve(version)
+        ovmSolcPath = require.resolve(
+          `@eth-optimism/solc-v${version}/soljson.js`
+        )
       } catch (err) {
         console.log(err)
         if (err.toString().contains('Cannot find module')) {
@@ -27,6 +29,8 @@ export const loadCompilerPlugin = (version: string) => {
           throw err
         }
       }
+
+      console.log(`Using OVM compiler: ${version}`)
 
       const ovmInput = {
         language: 'Solidity',
@@ -42,7 +46,10 @@ export const loadCompilerPlugin = (version: string) => {
       // Separate the EVM and OVM inputs.
       for (const file of Object.keys(input.sources)) {
         evmInput.sources[file] = input.sources[file]
-        ovmInput.sources[file] = input.sources[file]
+
+        if (!input.sources[file].content.includes('// @unsupported: ovm')) {
+          ovmInput.sources[file] = input.sources[file]
+        }
       }
 
       // Build both inputs separately.
@@ -54,16 +61,7 @@ export const loadCompilerPlugin = (version: string) => {
 
       ovmOutput.errors = (ovmOutput.errors || []).map((error: any) => {
         if (error.severity === 'error') {
-          if (
-            input.sources[error.sourceLocation.file].content.includes(
-              '// @unsupported: ovm'
-            )
-          ) {
-            error.severity = 'warning'
-            error.formattedMessage = `OVM Compiler Warning (silenced by "// @unsupported: ovm"):\n ${error.formattedMessage}`
-          } else {
-            error.formattedMessage = `OVM Compiler Error (silence by adding: "// @unsupported: ovm" to the top of this file):\n ${error.formattedMessage}`
-          }
+          error.formattedMessage = `OVM Compiler Error (silence by adding: "// @unsupported: ovm" to the top of this file):\n ${error.formattedMessage}`
         }
 
         return error
