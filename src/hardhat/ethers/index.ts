@@ -2,7 +2,7 @@
 import type EthersT from 'ethers'
 import { extendEnvironment } from 'hardhat/config'
 import { lazyObject } from 'hardhat/plugins'
-import { getContractFactory as getL2ContractFactory } from '@eth-optimism/contracts'
+import { getContractDefinition } from '@eth-optimism/contracts'
 
 /* Imports: Internal */
 import './types/type-extensions'
@@ -14,8 +14,30 @@ import {
 } from './internal/helpers'
 import { makeL2Provider } from '../internal/provider'
 
-const layer1BridgeRouter = '0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef'
-const layer2BridgeRouter = '0xfeedfacefeedfacefeedfacefeedfacefeedface'
+/**
+ * Generates an ethers contract from a definition pulled from the optimism
+ * contracts package.
+ * @param ethers Ethers instance.
+ * @param name Name of the contract to generate
+ * @param args Constructor arguments to the contract.
+ * @returns Ethers contract object.
+ */
+const getContractFromDefinition = (
+  ethers: any,
+  signer: any,
+  name: string,
+  args: any[] = [],
+  ovm?: boolean
+): any => {
+  const contractDefinition = getContractDefinition(name, ovm)
+  const contractFactory = new ethers.ContractFactory(
+    contractDefinition.abi,
+    contractDefinition.bytecode,
+    signer
+  )
+
+  return contractFactory.deploy(...args)
+}
 
 extendEnvironment((hre) => {
   hre.l2provider = lazyObject(() => {
@@ -30,6 +52,54 @@ extendEnvironment((hre) => {
     const { ethers } = require('ethers') as typeof EthersT
 
     const providerProxy = createProviderProxy(hre.l2provider)
+
+    const contracts: {
+      L1CrossDomainMessenger: EthersT.Contract
+      L2CrossDomainMessenger: EthersT.Contract
+    } = {} as any
+
+    // ;(async () => {
+    //   await new Promise((resolve, reject) => {
+    //     let ticks = 0
+    //     setTimeout(() => {
+    //       if (ticks >= 50) {
+    //         reject(new Error('Unable to load L2 ethers in time!'))
+    //       }
+
+    //       if ((hre as any).ethers && (hre as any).l2ethers) {
+    //         resolve(null)
+    //       } else {
+    //         ticks++
+    //       }
+    //     }, 50)
+    //   })
+
+    //   const l1ethers = (hre as any).ethers
+    //   const l2ethers = (hre as any).l2ethers
+
+    //   const l1accounts = await l1ethers.getSigners()
+    //   const l2accounts = await l2ethers.getSigners()
+
+    //   contracts.L1CrossDomainMessenger = await getContractFromDefinition(
+    //     l1ethers,
+    //     l1accounts[l1accounts.length - 1],
+    //     'mockOVM_GenericCrossDomainMessenger',
+    //     [],
+    //     false
+    //   )
+
+    //   try {
+    //     contracts.L2CrossDomainMessenger = await getContractFromDefinition(
+    //       l2ethers,
+    //       l2accounts[1],
+    //       'mockOVM_GenericCrossDomainMessenger',
+    //       [],
+    //       true
+    //     )
+    //   } catch (err) {
+    //     console.log(err)
+    //   }
+    // })()
 
     return {
       ...ethers,
@@ -47,25 +117,14 @@ extendEnvironment((hre) => {
       waitForBridgeRelay: async (response: any): Promise<void> => {
         const receipt = await response.wait()
 
-        const l1Bridge = (getL2ContractFactory(
-          'mockOVM_GenericCrossDomainMessenger'
-        ) as any)
-          .attach(layer1BridgeRouter)
-          .connect((await (hre as any).ethers.getSigners())[0])
-        const l2Bridge = (getL2ContractFactory(
-          'mockOVM_GenericCrossDomainMessenger'
-        ) as any)
-          .attach(layer2BridgeRouter)
-          .connect((await getSigners(hre))[0])
-
-        const l1Messages = await l1Bridge.queryFilter(
-          l1Bridge.filters.SentMessage(),
+        const l1Messages = await contracts.L1CrossDomainMessenger.queryFilter(
+          contracts.L1CrossDomainMessenger.filters.SentMessage(),
           receipt.blockNumber,
           receipt.blockNumber
         )
 
         for (const message of l1Messages) {
-          await l2Bridge.relayMessage(
+          await contracts.L2CrossDomainMessenger.relayMessage(
             message.args._sender,
             message.args._target,
             message.args._message,
@@ -73,14 +132,14 @@ extendEnvironment((hre) => {
           )
         }
 
-        const l2Messages = await l1Bridge.queryFilter(
-          l1Bridge.filters.SentMessage(),
+        const l2Messages = await contracts.L2CrossDomainMessenger.queryFilter(
+          contracts.L2CrossDomainMessenger.filters.SentMessage(),
           receipt.blockNumber,
           receipt.blockNumber
         )
 
         for (const message of l2Messages) {
-          await l1Bridge.relayMessage(
+          await contracts.L1CrossDomainMessenger.relayMessage(
             message.args._sender,
             message.args._target,
             message.args._message,
@@ -88,8 +147,7 @@ extendEnvironment((hre) => {
           )
         }
       },
-      layer1BridgeRouter,
-      layer2BridgeRouter,
+      contracts,
     }
   })
 })

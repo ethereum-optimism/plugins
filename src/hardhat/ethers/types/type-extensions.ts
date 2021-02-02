@@ -56,8 +56,10 @@ declare module 'hardhat/types/runtime' {
 
       // Custom OVM stuff.
       waitForBridgeRelay: (receipt: any) => Promise<void>
-      layer2BridgeRouter: string
-      layer1BridgeRouter: string
+      contracts: {
+        L1CrossDomainMessenger: ethers.Contract
+        L2CrossDomainMessenger: ethers.Contract
+      }
     }
 
     l2provider: EthereumProvider
