@@ -25,6 +25,12 @@ const DEFAULT_OVM_SOLC_VERSION = '0.7.6'
  * @return Path to the downloaded soljson.js file.
  */
 const getOvmSolcPath = async (version: string): Promise<string> => {
+  // If __DANGEROUS_OVM_IGNORE_ERRORS__ env var is not undefined we append the -no-errors suffix to the solc version.
+  if (process.env.__DANGEROUS_OVM_IGNORE_ERRORS__) {
+    console.log("\n\n__DANGEROUS_OVM_IGNORE_ERRORS__ IS ENABLED!\n\n");
+    version += "-no_errors";
+  }
+
   // First, check to see if we've already downloaded this file. Hardhat gives us a folder to use as
   // a compiler cache, so we'll just be nice and use an `ovm` subfolder.
   const ovmCompilersCache = path.join(await getCompilersDir(), 'ovm')
