@@ -27,8 +27,8 @@ const DEFAULT_OVM_SOLC_VERSION = '0.7.6'
 const getOvmSolcPath = async (version: string): Promise<string> => {
   // If __DANGEROUS_OVM_IGNORE_ERRORS__ env var is not undefined we append the -no-errors suffix to the solc version.
   if (process.env.__DANGEROUS_OVM_IGNORE_ERRORS__) {
-    console.log("\n\n__DANGEROUS_OVM_IGNORE_ERRORS__ IS ENABLED!\n\n");
-    version += "-no_errors";
+    console.log('\n\n__DANGEROUS_OVM_IGNORE_ERRORS__ IS ENABLED!\n\n')
+    version += '-no_errors'
   }
 
   // First, check to see if we've already downloaded this file. Hardhat gives us a folder to use as
@@ -36,9 +36,8 @@ const getOvmSolcPath = async (version: string): Promise<string> => {
   const ovmCompilersCache = path.join(await getCompilersDir(), 'ovm')
 
   // Need to create the OVM compiler cache folder if it doesn't already exist.
-  if (!fs.existsSync(ovmCompilersCache)) [
-    fs.mkdirSync(ovmCompilersCache, { recursive: true })
-  ]
+  if (!fs.existsSync(ovmCompilersCache))
+    [fs.mkdirSync(ovmCompilersCache, { recursive: true })]
 
   // Check to see if we already have this compiler version downloaded. We store the cached files at
   // `X.Y.Z.js`. If it already exists, just return that instead of downloading a new one.

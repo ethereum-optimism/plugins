@@ -58,48 +58,52 @@ extendEnvironment((hre) => {
       L2CrossDomainMessenger: EthersT.Contract
     } = {} as any
 
-    // ;(async () => {
-    //   await new Promise((resolve, reject) => {
-    //     let ticks = 0
-    //     setTimeout(() => {
-    //       if (ticks >= 50) {
-    //         reject(new Error('Unable to load L2 ethers in time!'))
-    //       }
+    ;(async () => {
+      if (!process.env.__OVM_USE_EXPERIMENTAL_FEATURES__) {
+        return
+      }
 
-    //       if ((hre as any).ethers && (hre as any).l2ethers) {
-    //         resolve(null)
-    //       } else {
-    //         ticks++
-    //       }
-    //     }, 50)
-    //   })
+      await new Promise((resolve, reject) => {
+        let ticks = 0
+        setTimeout(() => {
+          if (ticks >= 50) {
+            reject(new Error('Unable to load L2 ethers in time!'))
+          }
 
-    //   const l1ethers = (hre as any).ethers
-    //   const l2ethers = (hre as any).l2ethers
+          if ((hre as any).ethers && (hre as any).l2ethers) {
+            resolve(null)
+          } else {
+            ticks++
+          }
+        }, 50)
+      })
 
-    //   const l1accounts = await l1ethers.getSigners()
-    //   const l2accounts = await l2ethers.getSigners()
+      const l1ethers = (hre as any).ethers
+      const l2ethers = (hre as any).l2ethers
 
-    //   contracts.L1CrossDomainMessenger = await getContractFromDefinition(
-    //     l1ethers,
-    //     l1accounts[l1accounts.length - 1],
-    //     'mockOVM_GenericCrossDomainMessenger',
-    //     [],
-    //     false
-    //   )
+      const l1accounts = await l1ethers.getSigners()
+      const l2accounts = await l2ethers.getSigners()
 
-    //   try {
-    //     contracts.L2CrossDomainMessenger = await getContractFromDefinition(
-    //       l2ethers,
-    //       l2accounts[1],
-    //       'mockOVM_GenericCrossDomainMessenger',
-    //       [],
-    //       true
-    //     )
-    //   } catch (err) {
-    //     console.log(err)
-    //   }
-    // })()
+      contracts.L1CrossDomainMessenger = await getContractFromDefinition(
+        l1ethers,
+        l1accounts[l1accounts.length - 1],
+        'mockOVM_GenericCrossDomainMessenger',
+        [],
+        false
+      )
+
+      try {
+        contracts.L2CrossDomainMessenger = await getContractFromDefinition(
+          l2ethers,
+          l2accounts[1],
+          'mockOVM_GenericCrossDomainMessenger',
+          [],
+          true
+        )
+      } catch (err) {
+        console.log(err)
+      }
+    })()
 
     return {
       ...ethers,
