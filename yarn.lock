@@ -18,13 +18,12 @@
   resolved "https://registry.yarnpkg.com/@ensdomains/resolver/-/resolver-0.2.4.tgz#c10fe28bf5efbf49bff4666d909aed0265efbc89"
   integrity sha512-bvaTH34PMCbv6anRa9I/0zjLJgY4EuznbEMgbV77JBCQ9KNC46rzi0avuxpOfu+xDjPEtSFGqVEOr5GlUSGudA==
 
-"@eth-optimism/contracts@^0.1.4":
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/@eth-optimism/contracts/-/contracts-0.1.4.tgz#a918bffcdfa0ce22c1af3b091a81af732f58a294"
-  integrity sha512-JlbhPkYDgurQwlar1L90XTAG0QK8Sd2WCU8Zaa6BXn+Bg1mVe3g80samE0YaOFNHmSscjtvjXqy3B/d0tzIH7w==
+"@eth-optimism/contracts@0.0.2-alpha.14":
+  version "0.0.2-alpha.14"
+  resolved "https://registry.yarnpkg.com/@eth-optimism/contracts/-/contracts-0.0.2-alpha.14.tgz#382ae9250e7d89e7729bcfe73ffdb85897e385c2"
+  integrity sha512-EeOKiQ+Tu/bZqlq2bsXJegRYHhBXlcDO+fNXG1NJyies23rcLrjR7LMocJmw/F9TpYJ08UqvOHttD5w//cntpg==
   dependencies:
     "@eth-optimism/solc" "^0.6.12-alpha.1"
-    "@ethersproject/abstract-provider" "^5.0.8"
     "@ethersproject/contracts" "^5.0.5"
     "@ethersproject/hardware-wallets" "^5.0.8"
     "@openzeppelin/contracts" "^3.3.0"
@@ -3368,6 +3367,7 @@ ethereumjs-blockchain@^4.0.3:
     semaphore "^1.1.0"
 
 ethereumjs-common@1.5.0, "ethjs-common-v1@npm:ethereumjs-common@1.5.0":
+  name ethjs-common-v1
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/ethereumjs-common/-/ethereumjs-common-1.5.0.tgz#d3e82fc7c47c0cef95047f431a99485abc9bb1cd"
   integrity sha512-SZOjgK1356hIY7MRj3/ma5qtfr/4B5BL+G4rP/XSMYr2z1H5el4RX5GReYCKmQmYI/nSBmRnwrZ17IfHuG0viQ==
