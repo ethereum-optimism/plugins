@@ -151,7 +151,7 @@ subtask(
 
     // Transfer over any OVM outputs to the EVM output, with an identifier.
     for (const fileName of Object.keys(ovmOutput.contracts || {})) {
-      if (fileName in Object.keys(evmOutput.contracts || {})) {
+      if (Object.keys(evmOutput.contracts || {}).includes(fileName)) {
         for (const contractName of Object.keys(ovmOutput.contracts[fileName])) {
           const contractOutput = ovmOutput.contracts[fileName][contractName]
 
