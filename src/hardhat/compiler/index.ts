@@ -42,9 +42,12 @@ const getOvmSolcPath = async (version: string): Promise<string> => {
   // Check to see if we already have this compiler version downloaded. We store the cached files at
   // `X.Y.Z.js`. If it already exists, just return that instead of downloading a new one.
   const cachedCompilerPath = path.join(ovmCompilersCache, `${version}.js`)
-  if (fs.existsSync(cachedCompilerPath)) {
-    return cachedCompilerPath
-  }
+  console.log(
+    `OVM compiler versions are currently somewhat unstable. Ignoring cache to guarantee we have the latest version.`
+  )
+  // if (fs.existsSync(cachedCompilerPath)) {
+  //   return cachedCompilerPath
+  // }
 
   console.log(`Downloading OVM compiler version ${version}`)
 
