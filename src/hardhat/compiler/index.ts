@@ -114,12 +114,6 @@ subtask(
       }
     }
 
-    console.log(
-      `Compiling ${
-        Object.keys(ovmInput.sources).length
-      } files with OVM compiler ${ovmSolcVersion}`
-    )
-
     // Build both inputs separately.
     const evmOutput = await runSuper({ input: evmInput, solcPath })
     const ovmOutput = await run(TASK_COMPILE_SOLIDITY_RUN_SOLCJS, {
@@ -151,7 +145,7 @@ subtask(
 
     // Transfer over any OVM outputs to the EVM output, with an identifier.
     for (const fileName of Object.keys(ovmOutput.contracts || {})) {
-      if (fileName in Object.keys(evmOutput.contracts || {})) {
+      if (Object.keys(evmOutput.contracts || {}).includes(fileName)) {
         for (const contractName of Object.keys(ovmOutput.contracts[fileName])) {
           const contractOutput = ovmOutput.contracts[fileName][contractName]
 
@@ -163,12 +157,12 @@ subtask(
               linkRefs[linkRefFileName]
             )) {
               delete linkRefs[linkRefFileName][linkRefName]
-              linkRefs[linkRefFileName][`${linkRefName}.ovm`] = linkRefOutput
+              linkRefs[linkRefFileName][`${linkRefName}-ovm`] = linkRefOutput
             }
           }
 
-          // OVM compiler output is signified by adding .ovm to the output name.
-          evmOutput.contracts[fileName][`${contractName}.ovm`] = contractOutput
+          // OVM compiler output is signified by adding -ovm to the output name.
+          evmOutput.contracts[fileName][`${contractName}-ovm`] = contractOutput
         }
       }
     }

@@ -20,16 +20,20 @@ task(TASK_TEST_SETUP_TEST_ENVIRONMENT, async (args, hre: any, runSuper) => {
   // Patch the require function to point to OVM files.
   const _req = hre.artifacts.require
   const req = (name: string) => {
-    // Need an extra `.ovm` because require strips out everything after the last period.
-    return _req(name + '.ovm.ovm')
+    if (!name.endsWith('-ovm')) {
+      name = name + '-ovm'
+    }
+    return _req(name)
   }
   hre.artifacts.require = req
 
   // Patch the read artifact function, also to point to OVM files.
   const _read = hre.artifacts.readArtifact.bind(hre.artifacts)
   const read = (name: string) => {
-    // No need to include an extra `.ovm` within this function.
-    return _read(name + '.ovm')
+    if (!name.endsWith('-ovm')) {
+      name = name + '-ovm'
+    }
+    return _read(name)
   }
   hre.artifacts.readArtifact = read
 
