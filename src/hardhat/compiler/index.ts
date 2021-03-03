@@ -42,12 +42,9 @@ const getOvmSolcPath = async (version: string): Promise<string> => {
   // Check to see if we already have this compiler version downloaded. We store the cached files at
   // `X.Y.Z.js`. If it already exists, just return that instead of downloading a new one.
   const cachedCompilerPath = path.join(ovmCompilersCache, `${version}.js`)
-  console.log(
-    `OVM compiler versions are currently somewhat unstable. Ignoring cache to guarantee we have the latest version.`
-  )
-  // if (fs.existsSync(cachedCompilerPath)) {
-  //   return cachedCompilerPath
-  // }
+  if (fs.existsSync(cachedCompilerPath)) {
+    return cachedCompilerPath
+  }
 
   console.log(`Downloading OVM compiler version ${version}`)
 
@@ -117,12 +114,6 @@ subtask(
       }
     }
 
-    console.log(
-      `Compiling ${
-        Object.keys(ovmInput.sources).length
-      } files with OVM compiler ${ovmSolcVersion}`
-    )
-
     // Build both inputs separately.
     const evmOutput = await runSuper({ input: evmInput, solcPath })
     const ovmOutput = await run(TASK_COMPILE_SOLIDITY_RUN_SOLCJS, {
@@ -166,12 +157,12 @@ subtask(
               linkRefs[linkRefFileName]
             )) {
               delete linkRefs[linkRefFileName][linkRefName]
-              linkRefs[linkRefFileName][`${linkRefName}.ovm`] = linkRefOutput
+              linkRefs[linkRefFileName][`${linkRefName}-ovm`] = linkRefOutput
             }
           }
 
-          // OVM compiler output is signified by adding .ovm to the output name.
-          evmOutput.contracts[fileName][`${contractName}.ovm`] = contractOutput
+          // OVM compiler output is signified by adding -ovm to the output name.
+          evmOutput.contracts[fileName][`${contractName}-ovm`] = contractOutput
         }
       }
     }

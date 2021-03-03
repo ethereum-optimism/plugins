@@ -105,7 +105,7 @@ export const getContractAt = async (
   const { Contract } = require('ethers') as typeof ethers
 
   if (typeof nameOrAbi === 'string') {
-    const artifact = await hre.artifacts.readArtifact(`${nameOrAbi}.ovm`)
+    const artifact = await hre.artifacts.readArtifact(`${nameOrAbi}-ovm`)
     const factory = await getContractFactoryByAbiAndBytecode(
       hre,
       artifact.abi,
@@ -144,7 +144,7 @@ const getContractFactoryByName = async (
   contractName: string,
   signerOrOptions?: ethers.Signer | FactoryOptions
 ) => {
-  const artifact = await hre.artifacts.readArtifact(`${contractName}.ovm`)
+  const artifact = await hre.artifacts.readArtifact(`${contractName}-ovm`)
 
   let libraries: Libraries = {}
   let signer: ethers.Signer | undefined
