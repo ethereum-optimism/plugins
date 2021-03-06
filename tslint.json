@@ -1,3 +1,8 @@
 {
-    "extends": "@eth-optimism/dev/tslint.json"
+    "extends": "@eth-optimism/dev/tslint.json",
+    "rules": {
+        "prefer-conditional-expression": false,
+        "array-type": false,
+        "no-var-requires": false
+    }
 }

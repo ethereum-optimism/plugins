@@ -38,7 +38,7 @@ export const makeL2Provider = (hre: HardhatRuntimeEnvironment) => {
     hre.artifacts
   )
 
-  let provider = findProvider(actualprovider)
+  const provider = findProvider(actualprovider)
 
   // const l1ProviderActual = hre.network.provider
   // let l1Provider = l1ProviderActual

@@ -124,7 +124,7 @@ subtask(
     // Just doing this to add some extra useful information to any errors in the OVM compiler output.
     ovmOutput.errors = (ovmOutput.errors || []).map((error: any) => {
       if (error.severity === 'error') {
-        error.formattedMessage = `OVM Compiler Error (silence by adding: "// @unsupported: ovm" to the top of this file):\n ${error.formattedMessage}`
+        error.formattedMessage = `OVM Compiler Error (insert "// @unsupported: ovm" if you don't want this file to be compiled for the OVM):\n ${error.formattedMessage}`
       }
 
       return error
@@ -151,7 +151,7 @@ subtask(
 
           // Need to fix any link references in the OVM outputs. Otherwise we'll be trying to link
           // an OVM-compiled contract to EVM-compiled contracts.
-          const linkRefs = contractOutput.evm.bytecode.linkReferences
+          const linkRefs = contractOutput.evm?.bytecode?.linkReferences
           for (const linkRefFileName of Object.keys(linkRefs || {})) {
             for (const [linkRefName, linkRefOutput] of Object.entries(
               linkRefs[linkRefFileName]
