@@ -37,3 +37,12 @@ export class MockProvider extends providers.Web3Provider {
 export const waffle = {
   MockProvider,
 }
+
+// We're iceboxing this plugin for a bit.
+console.log(`
+@eth-optimism/plugins/waffle: WARNING -- this plugin has been moved to
+our develoment backlog and is not currently being actively maintained. Most
+contracts should "just work" on the OVM. If you want to explicitly test on the
+OVM you should run an L2 geth node. See the below link for more information:
+https://community.optimism.io/docs/developers/integration.html
+`)

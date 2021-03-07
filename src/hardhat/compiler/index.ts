@@ -77,14 +77,7 @@ subtask(
     { config, run },
     runSuper
   ) => {
-    // Just some silly sanity checks, make sure we have a solc version to download. Our format is
-    // `X.Y.Z` (for now).
-    let ovmSolcVersion: string
-    if (!config.ovm || !config.ovm.solcVersion) {
-      ovmSolcVersion = DEFAULT_OVM_SOLC_VERSION
-    } else {
-      ovmSolcVersion = config.ovm.solcVersion
-    }
+    const ovmSolcVersion = config.ovm?.solcVersion || DEFAULT_OVM_SOLC_VERSION
 
     // Get a path to a soljson file.
     const ovmSolcPath = await getOvmSolcPath(ovmSolcVersion)
@@ -105,7 +98,7 @@ subtask(
     }
 
     // Separate the EVM and OVM inputs.
-    for (const file of Object.keys(input.sources)) {
+    for (const file of Object.keys(input.sources || {})) {
       evmInput.sources[file] = input.sources[file]
 
       // Ignore any contract that has this tag.
@@ -114,7 +107,9 @@ subtask(
       }
     }
 
-    // Build both inputs separately.
+    // Build both inputs separately. We build the EVM output using `runSuper` because we don't know
+    // if the user is using a `solcjs` wrapper or a native `solc` binary. OVM output is always
+    // built with `solcjs`.
     const evmOutput = await runSuper({ input: evmInput, solcPath })
     const ovmOutput = await run(TASK_COMPILE_SOLIDITY_RUN_SOLCJS, {
       input: ovmInput,
