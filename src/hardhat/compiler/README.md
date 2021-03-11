@@ -16,7 +16,7 @@ npm install @eth-optimism/plugins
 Via `yarn`:
 
 ```
-yarn install @eth-optimism/plugins
+yarn add @eth-optimism/plugins
 ```
 
 Next, import the plugin inside your `hardhat.config.js`:
