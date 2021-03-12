@@ -28,15 +28,18 @@ const findProvider = (base: any): any => {
 }
 
 export const makeL2Provider = (hre: HardhatRuntimeEnvironment) => {
-  const networkName = HARDHAT_NETWORK_NAME
-  const networkConfig = hre.config.networks[networkName]
+  const networkConfig = hre.config.networks[hre.network.name]
 
   const actualprovider = createProvider(
-    networkName,
+    hre.network.name,
     networkConfig,
     hre.config.paths,
     hre.artifacts
   )
+
+  if (hre.network.name !== HARDHAT_NETWORK_NAME) {
+    return actualprovider;
+  }
 
   const provider = findProvider(actualprovider)
 
