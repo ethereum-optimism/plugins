@@ -1,4 +1,4 @@
-import * as utils from 'ethjs-util-v6'
+import { bufferToInt, addHexPrefix, toBuffer, BN } from 'ethereumjs-util'
 import { BigNumber } from 'ethers'
 
 export const to = {
@@ -7,7 +7,7 @@ export const to = {
       if (val.indexOf('0x') === 0) {
         return val.trim()
       } else {
-        val = new utils.BN(val)
+        val = new BN(val)
       }
     }
 
@@ -25,7 +25,7 @@ export const to = {
       val = val.toString('hex')
     }
 
-    return utils.addHexPrefix(val)
+    return addHexPrefix(val)
   },
   number: (val: any): number => {
     if (typeof val === 'number') {
@@ -38,6 +38,6 @@ export const to = {
       }
     }
 
-    return utils.bufferToInt(utils.toBuffer(val))
+    return bufferToInt(toBuffer(val))
   },
 }

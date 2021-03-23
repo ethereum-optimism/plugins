@@ -1,7 +1,7 @@
 // tslint:disable
-const BN = require('bn.js')
 import * as eGanache from 'ganache-core'
-import Common from 'ethjs-common-v1'
+import { BN } from 'ethereumjs-util'
+import Common from 'ethereumjs-common'
 
 /* Internal Imports */
 import { to } from './internal/to'

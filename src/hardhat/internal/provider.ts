@@ -1,6 +1,6 @@
 /* Imports: External */
 const VM = require('@eth-optimism/ethereumjs-vm').default
-const BN = require('bn.js')
+import { BN } from 'ethereumjs-util'
 import { HardhatRuntimeEnvironment } from 'hardhat/types'
 import { HARDHAT_NETWORK_NAME } from 'hardhat/internal/constants'
 import { createProvider } from 'hardhat/internal/core/providers/construction'
