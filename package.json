@@ -27,9 +27,9 @@
   "dependencies": {
     "@eth-optimism/contracts": "https://github.com/ethereum-optimism/contracts#chore/trim-deps",
     "@eth-optimism/ethereumjs-vm": "^4.2.0-alpha.3",
-    "ethers": "^5.0.31",
     "ethereumjs-common": "^1.5.0",
     "ethereumjs-util": "^6.2.1",
+    "ethers": "^5.0.31",
     "node-fetch": "^2.6.1"
   },
   "peerDependencies": {
