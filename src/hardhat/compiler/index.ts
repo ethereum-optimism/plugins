@@ -2,8 +2,9 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import fetch from 'node-fetch'
-import { subtask } from 'hardhat/config'
+import { subtask, extendEnvironment } from 'hardhat/config'
 import { getCompilersDir } from 'hardhat/internal/util/global-dir'
+import { Artifacts } from 'hardhat/internal/artifacts'
 import {
   TASK_COMPILE_SOLIDITY_RUN_SOLCJS,
   TASK_COMPILE_SOLIDITY_RUN_SOLC,
@@ -11,7 +12,6 @@ import {
 
 /* Imports: Internal */
 import './type-extensions'
-import '../common/extend-hre'
 
 const OPTIMISM_SOLC_BIN_URL =
   'https://raw.githubusercontent.com/ethereum-optimism/solc-bin/gh-pages/bin'
@@ -125,3 +125,19 @@ subtask(
     return ovmOutput
   }
 )
+
+extendEnvironment((hre) => {
+  if (process.env.TARGET === 'ovm') {
+    ;(hre.network as any).ovm = true
+    // Quick check to make sure we don't accidentally perform this transform multiple times.
+    let artifactsPath = hre.config.paths.artifacts
+    if (!artifactsPath.endsWith('-ovm')) {
+      artifactsPath = artifactsPath + '-ovm'
+    }
+
+    // Forcibly update the artifacts object.
+    hre.config.paths.artifacts = artifactsPath
+    ;(hre as any).artifacts = new Artifacts(artifactsPath)
+    ;(hre.network as any).ovm = true
+  }
+})
