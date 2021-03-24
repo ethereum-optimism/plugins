@@ -2,13 +2,15 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import fetch from 'node-fetch'
-import { subtask } from 'hardhat/config'
+import { subtask, extendEnvironment } from 'hardhat/config'
+import { getCompilersDir } from 'hardhat/internal/util/global-dir'
+import { Artifacts } from 'hardhat/internal/artifacts'
 import {
   TASK_COMPILE_SOLIDITY_RUN_SOLCJS,
   TASK_COMPILE_SOLIDITY_RUN_SOLC,
 } from 'hardhat/builtin-tasks/task-names'
-import { getCompilersDir } from 'hardhat/internal/util/global-dir'
 
+/* Imports: Internal */
 import './type-extensions'
 
 const OPTIMISM_SOLC_BIN_URL =
@@ -72,18 +74,16 @@ const getOvmSolcPath = async (version: string): Promise<string> => {
 
 subtask(
   TASK_COMPILE_SOLIDITY_RUN_SOLC,
-  async (
-    { input, solcPath }: { input: any; solcPath: string },
-    { config, run },
-    runSuper
-  ) => {
+  async (args: { input: any; solcPath: string }, hre, runSuper) => {
+    if ((hre.network as any).ovm !== true) {
+      return runSuper(args)
+    }
+
     // Just some silly sanity checks, make sure we have a solc version to download. Our format is
     // `X.Y.Z` (for now).
-    let ovmSolcVersion: string
-    if (!config.ovm || !config.ovm.solcVersion) {
-      ovmSolcVersion = DEFAULT_OVM_SOLC_VERSION
-    } else {
-      ovmSolcVersion = config.ovm.solcVersion
+    let ovmSolcVersion = DEFAULT_OVM_SOLC_VERSION
+    if (hre.config?.ovm?.solcVersion) {
+      ovmSolcVersion = hre.config.ovm.solcVersion
     }
 
     // Get a path to a soljson file.
@@ -96,27 +96,19 @@ subtask(
     const ovmInput = {
       language: 'Solidity',
       sources: {},
-      settings: input.settings,
-    }
-    const evmInput = {
-      language: 'Solidity',
-      sources: {},
-      settings: input.settings,
+      settings: args.input.settings,
     }
 
     // Separate the EVM and OVM inputs.
-    for (const file of Object.keys(input.sources)) {
-      evmInput.sources[file] = input.sources[file]
-
+    for (const file of Object.keys(args.input.sources)) {
       // Ignore any contract that has this tag.
-      if (!input.sources[file].content.includes('// @unsupported: ovm')) {
-        ovmInput.sources[file] = input.sources[file]
+      if (!args.input.sources[file].content.includes('// @unsupported: ovm')) {
+        ovmInput.sources[file] = args.input.sources[file]
       }
     }
 
     // Build both inputs separately.
-    const evmOutput = await runSuper({ input: evmInput, solcPath })
-    const ovmOutput = await run(TASK_COMPILE_SOLIDITY_RUN_SOLCJS, {
+    const ovmOutput = await hre.run(TASK_COMPILE_SOLIDITY_RUN_SOLCJS, {
       input: ovmInput,
       solcJsPath: ovmSolcPath,
     })
@@ -130,49 +122,22 @@ subtask(
       return error
     })
 
-    // Filter out any "No input sources specified" errors, but only if one of the two compilations
-    // threw the error. Basically, it might be intended for only one of the EVM or OVM compilers to
-    // be compiling contracts, but something went wrong if *both* compilers recieve no input.
-    let errors = (ovmOutput.errors || []).concat(evmOutput.errors || [])
-    const filtered = errors.filter((error: any) => {
-      return error.message !== 'No input sources specified.'
-    })
-
-    // Make sure we only saw one of those "No input sources specified." errors.
-    if (errors.length === filtered.length + 1) {
-      errors = filtered
-    }
-
-    // Transfer over any OVM outputs to the EVM output, with an identifier.
-    for (const fileName of Object.keys(ovmOutput.contracts || {})) {
-      if (Object.keys(evmOutput.contracts || {}).includes(fileName)) {
-        for (const contractName of Object.keys(ovmOutput.contracts[fileName])) {
-          const contractOutput = ovmOutput.contracts[fileName][contractName]
-
-          // Need to fix any link references in the OVM outputs. Otherwise we'll be trying to link
-          // an OVM-compiled contract to EVM-compiled contracts.
-          const linkRefs = contractOutput.evm?.bytecode?.linkReferences
-          for (const linkRefFileName of Object.keys(linkRefs || {})) {
-            for (const [linkRefName, linkRefOutput] of Object.entries(
-              linkRefs[linkRefFileName]
-            )) {
-              delete linkRefs[linkRefFileName][linkRefName]
-              linkRefs[linkRefFileName][`${linkRefName}-ovm`] = linkRefOutput
-            }
-          }
-
-          // OVM compiler output is signified by adding -ovm to the output name.
-          evmOutput.contracts[fileName][`${contractName}-ovm`] = contractOutput
-        }
-      }
-    }
-
-    const output = {
-      errors,
-      contracts: evmOutput.contracts,
-      sources: evmOutput.sources,
-    }
-
-    return output
+    return ovmOutput
   }
 )
+
+extendEnvironment((hre) => {
+  if (process.env.TARGET === 'ovm') {
+    ;(hre.network as any).ovm = true
+    // Quick check to make sure we don't accidentally perform this transform multiple times.
+    let artifactsPath = hre.config.paths.artifacts
+    if (!artifactsPath.endsWith('-ovm')) {
+      artifactsPath = artifactsPath + '-ovm'
+    }
+
+    // Forcibly update the artifacts object.
+    hre.config.paths.artifacts = artifactsPath
+    ;(hre as any).artifacts = new Artifacts(artifactsPath)
+    ;(hre.network as any).ovm = true
+  }
+})
