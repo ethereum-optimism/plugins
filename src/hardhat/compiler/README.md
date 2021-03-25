@@ -19,6 +19,25 @@ Via `yarn`:
 yarn add @eth-optimism/plugins
 ```
 
+### New required step
+With the first stable release of the plugin for `hardhat`, we require adding these lines to your `package.json` for a smooth DevEx experience for compiling, testing, and deploying EVM _**and**_ OVM contracts/artifacts. Instead of our previous method of just running `yarn compile` and other yarn commands, you'll be using these instead.
+
+So, make sure to add these lines under your `"scripts"` in your `package.json`:
+```json
+{
+    "scripts": {
+        "clean": "rimraf ./cache && rimraf ./artifacts && rimraf ./deployments",
+        "compile:evm": "hardhat compile",
+        "compile:ovm": "TARGET=ovm hardhat compile",
+        "compile": "yarn clean && yarn compile:evm && yarn compile:ovm",
+        "test:evm": "yarn hardhat test",
+        "deploy:evm": "yarn hardhat --network l1 deploy --tags ERC20",
+        "test:ovm": "yarn TARGET=ovm hardhat test",
+        "deploy:ovm": "yarn TARGET=ovm hardhat --network l2 deploy --tags ERC20 --ovm"
+    }
+}
+```
+
 Next, import the plugin inside your `hardhat.config.js`:
 
 ```js
