@@ -135,8 +135,14 @@ extendEnvironment((hre) => {
       artifactsPath = artifactsPath + '-ovm'
     }
 
+    let cachePath = hre.config.paths.cache
+    if (!cachePath.endsWith('-ovm')) {
+      cachePath = cachePath + '-ovm'
+    }
+
     // Forcibly update the artifacts object.
     hre.config.paths.artifacts = artifactsPath
+    hre.config.paths.cache = cachePath
     ;(hre as any).artifacts = new Artifacts(artifactsPath)
     ;(hre.network as any).ovm = true
   }
