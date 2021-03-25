@@ -20,9 +20,12 @@ yarn add @eth-optimism/plugins
 ```
 
 ### New required step
-With the first stable release of the plugin for `hardhat`, we require adding these lines to your `package.json` for a smooth DevEx experience for compiling, testing, and deploying EVM _**and**_ OVM contracts/artifacts. Instead of our previous method of just running `yarn compile` and other yarn commands, you'll be using these instead.
+With the first stable release of the plugin for `hardhat`, we require adding these lines to your `package.json` for a smooth DevEx experience for compiling, testing, and deploying EVM _**and**_ OVM contracts/artifacts.
+Instead of our previous method of just running `yarn compile` and other yarn commands, you'll be using these instead.
 
 So, make sure to add these lines under your `"scripts"` in your `package.json`:
+
+> NOTE: In the example scripts below, we are using `hardhat-deploy` plugin (as in our [`optimism-tutorial`](https://github.com/ethereum-optimism/optimism-tutorial)). This plugin is _not_ required, but _we strongly encourage using it_ for how easy it makes contract deployments against the OVM and EVM.
 ```json
 {
     "scripts": {
