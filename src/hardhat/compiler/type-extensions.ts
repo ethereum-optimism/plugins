@@ -15,19 +15,23 @@ declare module 'hardhat/types/config' {
 
   interface HardhatNetworkUserConfig {
     ovm?: boolean;
+    ignoreRxList?: string[];
   }
 
   interface HttpNetworkUserConfig {
     ovm?: boolean;
+    ignoreRxList?: string[];
   }
 
 
   interface HardhatNetworkConfig {
     ovm: boolean;
+    ignoreRxList: string[];
   }
 
   interface HttpNetworkConfig {
     ovm: boolean;
+    ignoreRxList: string[];
   }
 }
 
@@ -35,5 +39,6 @@ declare module 'hardhat/types/config' {
 declare module 'hardhat/types/runtime' {
   interface Network {
     ovm: boolean;
+    ignoreRxList: string[];
   }
 }
