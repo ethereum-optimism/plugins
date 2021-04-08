@@ -87,6 +87,7 @@ subtask(
           else {
               //console.log(file + ' included');
           }
+        }
         return runSuper(args)
     }
 
